@@ -1,0 +1,45 @@
+{
+	"$schema": "https://turborepo.com/schema.json",
+	"globalDependencies": ["packages/tsconfig/*.json", "pnpm-workspace.yaml", "package.json", ".npmrc", "biome.jsonc"],
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**", ".wrangler/**"]
+		},
+		"typecheck": {
+			"dependsOn": ["^build"],
+			"outputs": []
+		},
+		"lint": {
+			"outputs": []
+		},
+		"format": {
+			"outputs": []
+		},
+		"test": {
+			"dependsOn": ["^build"],
+			"outputs": []
+		},
+		"test:watch": {
+			"cache": false,
+			"persistent": true
+		},
+		"test:integration": {
+			"dependsOn": ["^build"],
+			"cache": false,
+			"outputs": []
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"deploy": {
+			"dependsOn": ["build", "test"],
+			"cache": false
+		},
+		"deploy:staging": {
+			"dependsOn": ["build", "test"],
+			"cache": false
+		}
+	}
+}

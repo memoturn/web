@@ -1,0 +1,24 @@
+# Console dev overlay: serve the HOST-built console (web/apps/console/dist)
+# instead of the copy baked into the image at build time. With this overlay up,
+# `make console-build` + a browser refresh updates http://localhost:8080/console
+# — no image rebuild, no container restart (StaticFiles reads from disk per
+# request). Works with the base stack and with the enterprise overlay. Run from
+# the repo ROOT: relative paths resolve against the first -f file's directory,
+# so the bind-mount path below is root-relative even though this file lives in
+# web/.
+#
+#   docker compose -f docker-compose.yml \
+#     [-f enterprise/docker-compose.yml] \
+#     -f web/docker-compose.yml up -d control-plane
+#
+# Dev-only: never use in production — the bind mount couples the container to
+# the host checkout. This is an OVERLAY, not a standalone stack: a bare
+# `docker compose up` from web/ won't work (control-plane has no image/build
+# here by design).
+
+services:
+  control-plane:
+    environment:
+      MEMOTURN_CONSOLE_DIR: /app/console-host
+    volumes:
+      - ./web/apps/console/dist:/app/console-host:ro

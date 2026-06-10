@@ -1,0 +1,10 @@
+node_modules/
+.turbo/
+dist/
+.astro/
+.output/
+.wrangler/
+.tanstack/
+*.tsbuildinfo
+worker-configuration.d.ts
+.DS_Store

@@ -1,0 +1,43 @@
+{
+	"name": "@memoturn/web",
+	"private": true,
+	"license": "Apache-2.0",
+	"type": "module",
+	"imports": {
+		"#/*": "./src/*"
+	},
+	"scripts": {
+		"dev": "vite dev --port 3000",
+		"build": "vite build",
+		"preview": "pnpm build && vite preview",
+		"lint": "biome check .",
+		"typecheck": "tsc --noEmit",
+		"deploy": "pnpm build && wrangler deploy",
+		"deploy:staging": "CF_ENV=staging vite build --mode staging && wrangler deploy",
+		"cf-typegen": "wrangler types"
+	},
+	"dependencies": {
+		"@cloudflare/vite-plugin": "catalog:",
+		"@memoturn/ui": "workspace:*",
+		"@tailwindcss/vite": "catalog:",
+		"@tanstack/react-router": "catalog:",
+		"@tanstack/react-start": "catalog:",
+		"@tanstack/router-plugin": "catalog:",
+		"lucide-react": "catalog:",
+		"react": "catalog:",
+		"react-dom": "catalog:",
+		"tailwindcss": "catalog:",
+		"tw-animate-css": "catalog:"
+	},
+	"devDependencies": {
+		"@memoturn/tsconfig": "workspace:*",
+		"@tailwindcss/typography": "catalog:",
+		"@types/node": "catalog:",
+		"@types/react": "catalog:",
+		"@types/react-dom": "catalog:",
+		"@vitejs/plugin-react": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"wrangler": "catalog:"
+	}
+}

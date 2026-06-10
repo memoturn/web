@@ -1,0 +1,43 @@
+{
+	"name": "@memoturn/web-monorepo",
+	"version": "0.0.0",
+	"private": true,
+	"license": "Apache-2.0",
+	"description": "Marketing site, docs, and admin console for the Memoturn agent runtime.",
+	"packageManager": "pnpm@10.11.0",
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev --filter=./apps/*",
+		"dev:web": "pnpm --filter @memoturn/web dev",
+		"dev:docs": "pnpm --filter @memoturn/docs dev",
+		"dev:console": "pnpm --filter @memoturn/console dev",
+		"lint": "turbo run lint",
+		"typecheck": "turbo run typecheck",
+		"test": "turbo run test",
+		"deploy": "turbo run deploy",
+		"deploy:staging": "turbo run deploy:staging",
+		"format": "biome format --write .",
+		"check": "biome check --write .",
+		"check:ci": "biome ci ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "catalog:",
+		"turbo": "catalog:",
+		"typescript": "catalog:"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild",
+			"workerd",
+			"lightningcss",
+			"@biomejs/biome"
+		],
+		"overrides": {
+			"esbuild": ">=0.25.0",
+			"yaml": ">=2.8.3"
+		}
+	}
+}
