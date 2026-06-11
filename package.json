@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"license": "Apache-2.0",
-	"description": "Marketing site, docs, and admin console for the Memoturn agent runtime.",
+	"description": "Marketing site and docs for Memoturn, the agent-memory database.",
 	"packageManager": "pnpm@10.11.0",
 	"engines": {
 		"node": ">=22"
@@ -13,7 +13,6 @@
 		"dev": "turbo run dev --filter=./apps/*",
 		"dev:web": "pnpm --filter @memoturn/web dev",
 		"dev:docs": "pnpm --filter @memoturn/docs dev",
-		"dev:console": "pnpm --filter @memoturn/console dev",
 		"lint": "turbo run lint",
 		"typecheck": "turbo run typecheck",
 		"test": "turbo run test",
