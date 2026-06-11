@@ -9,20 +9,22 @@ repo (history preserved). The brand and positioning registers (`BRAND.md`, `PROD
 pnpm/Turborepo monorepo, deployed to Cloudflare Workers:
 
 - `apps/web` — marketing site (Vite + TanStack) → [memoturn.ai](https://memoturn.ai)
-- `apps/docs` — docs (Astro Starlight) → [docs.memoturn.ai](https://docs.memoturn.ai)
 - `packages/ui` — shared design system; tokens at `packages/ui/src/styles/tokens.css`
+
+The docs site (docs.memoturn.ai) lives in the product repo at
+[`memoturn/memoturn` `docs/site`](https://github.com/memoturn/memoturn) — moved there so the
+published docs evolve in the same repo as the code they describe (tokens.css is vendored
+there; keep it in sync when the brand changes).
 
 ## Commands
 
 ```bash
 pnpm install
-pnpm dev          # both apps (marketing on :3000 + docs)
-pnpm dev:web      # marketing site only
-pnpm dev:docs     # docs site only
-pnpm build        # production build of both apps
+pnpm dev          # marketing site (:3000)
+pnpm build        # production build
 pnpm typecheck    # tsc/astro check
 pnpm check        # biome lint + format (this repo is biome, not eslint/prettier)
-pnpm run deploy   # build + deploy both apps via wrangler ("run" required: bare `pnpm deploy` is pnpm's built-in)
+pnpm run deploy   # build + deploy via wrangler ("run" required: bare `pnpm deploy` is pnpm's built-in)
 ```
 
 ## Source of truth

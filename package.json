@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"license": "Apache-2.0",
-	"description": "Marketing site and docs for Memoturn, the agent-memory database.",
+	"description": "Marketing site for Memoturn, the agent-memory database. Docs live in the product repo (memoturn/memoturn docs/site).",
 	"packageManager": "pnpm@10.11.0",
 	"engines": {
 		"node": ">=22"
@@ -12,7 +12,6 @@
 		"build": "turbo run build",
 		"dev": "turbo run dev --filter=./apps/*",
 		"dev:web": "pnpm --filter @memoturn/web dev",
-		"dev:docs": "pnpm --filter @memoturn/docs dev",
 		"lint": "turbo run lint",
 		"typecheck": "turbo run typecheck",
 		"test": "turbo run test",
