@@ -45,7 +45,7 @@ node, in-process object store), reproducible with `cargo run --release -p memotu
 ## Deferred work
 
 These items are tracked in the architecture decision records at
-[github.com/memoturn/db](https://github.com/memoturn/db) (`docs/adr/`). No dates are attached;
+[github.com/memoturn/memoturn](https://github.com/memoturn/memoturn) (`docs/adr/`). No dates are attached;
 the ordering below reflects dependency, not commitment.
 
 ### Storage and engine

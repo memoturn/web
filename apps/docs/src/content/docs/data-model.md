@@ -147,7 +147,7 @@ Embeddings are bring-your-own by default; per-node auto-embedding is an opt-in �
 
 Measured prototype p50s (single node, in-process object store): SQL write 16 µs, doc insert
 15 µs, hot KV read 3 µs. Reproduce with `cargo run --release -p memoturn-bench` —
-[github.com/memoturn/db](https://github.com/memoturn/db).
+[github.com/memoturn/memoturn](https://github.com/memoturn/memoturn).
 
 SDK setup and full client shapes: [TypeScript SDK](/sdk-typescript/),
 [Python SDK](/sdk-python/), [Quickstart](/quickstart/).

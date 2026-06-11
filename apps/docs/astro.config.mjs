@@ -14,7 +14,7 @@ export default defineConfig({
 			logo: { src: "./src/assets/memoturn-mark.svg", replacesTitle: false },
 			favicon: "/favicon.svg",
 			customCss: ["./src/styles/memoturn.css"],
-			social: [{ icon: "github", label: "GitHub", href: "https://github.com/memoturn/db" }],
+			social: [{ icon: "github", label: "GitHub", href: "https://github.com/memoturn/memoturn" }],
 			head: [
 				{ tag: "meta", attrs: { property: "og:type", content: "website" } },
 				// TODO: add a designed 1200×630 og-image.png to public/ and restore

@@ -172,7 +172,7 @@ For in-cluster MinIO or other HTTP endpoints, the node honors `AWS_ENDPOINT` and
 ## Proven on kind
 
 The chart deploys a working, authenticated cell to kind with in-cluster MinIO
-(`docs/deployment-proof.md` in the [repository](https://github.com/memoturn/db)). All HTTP
+(`docs/deployment-proof.md` in the [repository](https://github.com/memoturn/memoturn)). All HTTP
 benchmarks pass through the full stack — provision 1.61 ms p50, memory ingest 2.81 ms p50,
 write + segment ship to MinIO 6.54 ms p50.
 

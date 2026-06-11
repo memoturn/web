@@ -4,7 +4,7 @@ description: memoturn — Python client for typed agent memory and the multi-mod
 ---
 
 `memoturn` is the Python client for Memoturn. One dependency: `httpx`. Source:
-[github.com/memoturn/db](https://github.com/memoturn/db), `sdk/python/`.
+[github.com/memoturn/memoturn](https://github.com/memoturn/memoturn), `sdk/python/`.
 
 ```bash
 pip install -e sdk/python   # from a checkout

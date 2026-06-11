@@ -10,4 +10,4 @@ function resolve(envValue: string | undefined, fallback: string): string {
 
 export const DOCS_PUBLIC_URL = resolve(import.meta.env.VITE_PUBLIC_DOCS_URL as string | undefined, "https://docs.memoturn.ai");
 
-export const GITHUB_URL = "https://github.com/memoturn/db";
+export const GITHUB_URL = "https://github.com/memoturn/memoturn";

@@ -5,7 +5,7 @@ description: "@memoturn/sdk — zero-dependency TypeScript client for typed agen
 
 `@memoturn/sdk` is the TypeScript client for Memoturn. Zero dependencies — it uses the global
 `fetch` (Node 18+, browsers, workers). Source:
-[github.com/memoturn/db](https://github.com/memoturn/db), `sdk/typescript/`.
+[github.com/memoturn/memoturn](https://github.com/memoturn/memoturn), `sdk/typescript/`.
 
 ```bash
 npm install @memoturn/sdk

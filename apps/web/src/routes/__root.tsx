@@ -63,7 +63,7 @@ function RootErrorBoundary({ error }: { error: Error }) {
 						<Link to="/">Home</Link>
 					</Button>
 					<Button asChild variant="ghost">
-						<a href="https://github.com/memoturn/db/issues" target="_blank" rel="noreferrer">
+						<a href="https://github.com/memoturn/memoturn/issues" target="_blank" rel="noreferrer">
 							Open an issue
 						</a>
 					</Button>
@@ -92,7 +92,7 @@ function RootNotFound() {
 						</a>
 					</Button>
 					<Button asChild variant="ghost">
-						<a href="https://github.com/memoturn/db" target="_blank" rel="noreferrer">
+						<a href="https://github.com/memoturn/memoturn" target="_blank" rel="noreferrer">
 							GitHub
 						</a>
 					</Button>

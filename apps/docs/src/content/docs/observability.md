@@ -97,4 +97,4 @@ python3 scripts/bench-http.py http://127.0.0.1:8080 --platform-key ... --n 200
 ```
 
 Sources: the README and `docs/deployment-proof.md` in the
-[repository](https://github.com/memoturn/db).
+[repository](https://github.com/memoturn/memoturn).

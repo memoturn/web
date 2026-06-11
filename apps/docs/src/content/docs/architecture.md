@@ -133,4 +133,4 @@ PersistentVolumes. See [Deployment](/deployment/) and [Scaling](/scaling/).
 - [Typed memories](/memories/) and [Hybrid recall](/recall/) — the headline API
 - [Consistency](/consistency/) — txid, min_txid, durability modes
 - [Configuration](/configuration/) — `MEMOTURN_*` environment variables
-- Full design documents: [github.com/memoturn/db](https://github.com/memoturn/db)
+- Full design documents: [github.com/memoturn/memoturn](https://github.com/memoturn/memoturn)
