@@ -1,5 +1,7 @@
 # Memoturn web
 
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+
 Web surfaces for [Memoturn](https://github.com/memoturn/memoturn), split out of the product
 repo (history preserved). The brand and positioning registers (`BRAND.md`, `PRODUCT.md`,
 `DESIGN.md`) live here.
