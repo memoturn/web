@@ -109,8 +109,10 @@ UPDATE counters SET n = n + 1 WHERE k = 'orders';
 ```
 
 Reserved tables are prefixed `__memoturn_` (`__memoturn_kv`, `__memoturn_docs_{collection}`,
-`__memoturn_messages`, `__memoturn_memories*`). User SQL cannot mutate reserved tables directly —
-the typed surfaces (KV, docs, memory) are the only write paths to them.
+`__memoturn_messages`, `__memoturn_memories*`). User SQL cannot reference them, however the name
+is quoted — the typed surfaces (KV, docs, memory) are the only paths to them. Sandbox escapes
+(`ATTACH`, `VACUUM INTO`, `PRAGMA writable_schema`) are rejected, mutating statements need
+`write` scope, and benign read-only PRAGMAs pass. See [Security](/security/#the-sql-guard).
 
 ## Vectors
 

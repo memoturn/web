@@ -71,6 +71,10 @@ memoturn db delete <name>
 memoturn db create agent-42
 ```
 
+`db delete` writes a deletion tombstone: write tokens minted before the deletion are rejected
+(`403`), so a stale token cannot write into a re-created database of the same name. See
+[security](/security/#token-revocation).
+
 ## branch
 
 Copy-on-write branches, checkpoints, and rewind — see [branching](/branching/).

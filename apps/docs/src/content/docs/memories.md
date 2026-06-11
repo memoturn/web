@@ -81,7 +81,8 @@ Agents can replay extraction output without flooding the store with copies.
 ## Batch ingest
 
 `POST /v1/memory/{ns}/{profile}/memories` takes a batch; one batch is one transaction and returns
-one `txid`. The profile [auto-creates](/profiles/) on first ingest.
+one `txid`. Batches cap at 1,000 memories per request. The profile [auto-creates](/profiles/) on
+first ingest.
 
 ```json
 { "memories": [

@@ -24,6 +24,8 @@ The targets the architecture is designed and dashboarded against:
 
 Segment-shipping backlog is the one to alarm on: sustained backlog means object storage is not
 keeping up, which widens the Standard-durability RPO window (see [Architecture](/architecture/)).
+Durable-mode writes — `MEMOTURN_DURABILITY=durable`, or the per-request `Memoturn-Durability`
+header — are immune to backlog by construction: they ack only after the ship completes.
 
 ## What the deployment ships
 
@@ -39,6 +41,9 @@ Available today on every node:
 - **`/healthz`** — the readiness probe the chart wires up.
 - **`txid` on every read response** — replication lag is directly observable from the client
   side by comparing writer and replica txids (see [Consistency](/consistency/)).
+- **Request-surface guardrails** — body cap (`413`), request timeout, global concurrency cap,
+  and a control-endpoint rate limit (`429`), all tunable per node — see
+  [Configuration](/configuration/#request-limits--durability).
 
 ## Measured: prototype, single node
 

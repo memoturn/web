@@ -53,6 +53,11 @@ agent scale. Instead:
 
 Each cell caps its active set; beyond that you add cells, never grow etcd.
 
+Multi-node is enforced, not assumed: without `MEMOTURN_ETCD`, a node refuses to start when it
+looks multi-node unless `MEMOTURN_SINGLE_NODE=1`, and the Helm chart refuses `replicas > 1`
+without etcd (see [Deployment](/deployment/)). The lease lifecycle is integration-tested against
+a real etcd.
+
 ## Read replicas
 
 Replicas subscribe lazily on first read of a branch they don't own. Owners push sealed segments

@@ -34,6 +34,10 @@ MEMOTURN_ETCD=http://127.0.0.1:2379 MEMOTURN_OBJECT_STORE=s3://bucket \
 Each node holds one etcd lease; databases attach to their owner node's lease. Writes arriving at
 the wrong node are forwarded to the owner. See [Scaling & tiering](/scaling/) for the lease model.
 
+etcd is enforced, not assumed: without `MEMOTURN_ETCD`, a node **refuses to start** when it looks
+multi-node — auth on, or a non-loopback `MEMOTURN_ADVERTISE` — unless `MEMOTURN_SINGLE_NODE=1`
+declares it genuinely alone. The in-process lease fallback is safe for exactly one node.
+
 ## Kubernetes
 
 One Helm umbrella chart (`deploy/helm/memoturn`) deploys a complete Memoturn cell to any
@@ -59,12 +63,17 @@ Real keys from `values.yaml`:
 
 ```yaml
 dataplane:
-  replicas: 1
+  replicas: 1                # > 1 requires cluster.etcd.enabled — the chart refuses otherwise
   hotHandleCap: 50000        # MEMOTURN_HOT_CAP
   cacheSize: 10Gi            # emptyDir sizeLimit for the local cache tier
   resources:
     requests: { cpu: 250m, memory: 512Mi }
     limits: { memory: 2Gi }
+
+cluster:
+  etcd:
+    enabled: false           # required for replicas > 1; a single replica runs MEMOTURN_SINGLE_NODE=1
+    endpoints: ""            # "http://etcd-0:2379,http://etcd-1:2379"
 
 objectStorage:
   backend: minio             # minio | s3 (gcs/azure arrive with the object_store config surface)
@@ -74,16 +83,53 @@ objectStorage:
     existingSecret: ""       # AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY, or IRSA/workload identity
 
 minio:
-  enabled: true              # disable when objectStorage.backend=s3
+  enabled: true              # dev/self-hosted only; pinned image, secret-managed credentials
 
 auth:
   enabled: true
-  existingSecret: memoturn-auth   # keys: PLATFORM_KEY, CLUSTER_KEY
+  existingSecret: memoturn-auth   # keys: PLATFORM_KEY, CLUSTER_KEY (+ AUTH_KEY for multi-replica)
+
+server:                      # request-surface + durability knobs; empty = node default
+  requestTimeoutSecs: ""     # MEMOTURN_REQUEST_TIMEOUT (default 30)
+  maxBodyBytes: ""           # MEMOTURN_MAX_BODY_BYTES (default 32 MiB)
+  maxConcurrency: ""         # MEMOTURN_MAX_CONCURRENCY (default 1024)
+  controlRate: ""            # MEMOTURN_CONTROL_RATE (default 10 req/s)
+  durability: ""             # "" (standard) | durable — ack writes only after they ship
+  gcGraceSecs: ""            # MEMOTURN_GC_GRACE_SECS (default 600)
+  persistAuthKey: false      # persist a generated signing key to object storage (unencrypted)
+
+networkPolicy:
+  enabled: true              # egress locked to DNS + object store + optional 443
+  allowExternalIngress: true # false restricts ingress to extraIngressFrom (+ node-to-node)
+  allowHttpsEgress: true     # false for fully in-cluster (MinIO + self-hosted embedder)
+  extraIngressFrom: []
+  extraEgress: []            # e.g. etcd (TCP 2379)
+
+podDisruptionBudget:
+  enabled: false             # recommended for multi-replica (etcd) deployments
+  minAvailable: 1
 
 ai:
   existingSecret: ""         # optional: EXTRACT_API_KEY and/or EMBED_API_KEY
   embedProvider: ""          # voyage | openai (openai + embedBaseUrl reaches any compatible server)
 ```
+
+### Hardened by default
+
+The chart's security posture needs nothing turned on:
+
+- Pods run **non-root (uid 65532)** with a **read-only root filesystem**, all Linux capabilities
+  dropped, and the RuntimeDefault seccomp profile; the only writable paths are explicit
+  `emptyDir` mounts.
+- A dedicated **ServiceAccount with no Kubernetes API token** — `memoturnd` never calls the
+  K8s API.
+- A **NetworkPolicy** locks egress to DNS, the object store, and (optionally) TCP 443; adjust
+  the edges with `allowExternalIngress`, `extraIngressFrom`, and `extraEgress`.
+- The dev **MinIO subchart** uses a pinned image and secret-managed credentials — and is not for
+  production.
+- Setting `replicas > 1` without `cluster.etcd.enabled` **fails at template time**: the
+  in-process lease table cannot prevent split-brain. A single replica runs with
+  `MEMOTURN_SINGLE_NODE=1`.
 
 ### Install
 
@@ -93,6 +139,10 @@ kubectl create secret generic memoturn-auth \
 helm install memoturn deploy/helm/memoturn
 kubectl port-forward svc/memoturn 8080:8080
 ```
+
+For more than one replica: enable `cluster.etcd` with endpoints, add `AUTH_KEY` (base64 PKCS#8
+Ed25519 signing key) to the auth Secret so tokens validate across pods, and consider
+`podDisruptionBudget.enabled=true`.
 
 `helm lint deploy/helm/memoturn` validates the chart.
 

@@ -139,6 +139,9 @@ The Python SDK mirrors this 1:1 — see [TypeScript SDK](/sdk-typescript/) and
 ## GC and parent chains
 
 - Segments are refcounted by the manifests that reference them, directly or via parent chains.
+  Unreferenced objects — deleted branches, expired burners, zombie-writer orphans — are
+  reclaimed after a grace window (`MEMOTURN_GC_GRACE_SECS`, default 600 s), so copy-on-write
+  sharing is never broken by GC.
 - Parent compaction preserves any txid boundary pinned by a child fork.
 - Deep parent chains are capped (default 8); beyond that, a background materializer flattens the
   branch into its own snapshot.

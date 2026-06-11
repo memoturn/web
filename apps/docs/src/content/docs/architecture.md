@@ -65,6 +65,12 @@ by txid-chain contiguity; any gap falls back to object-storage restore, so strea
 optimization, never a correctness dependency. Segment ship measured **61 µs p50** (prototype,
 in-process object store).
 
+Writes ack on local commit and ship asynchronously by default; `MEMOTURN_DURABILITY=durable` (or
+a per-request `Memoturn-Durability: durable` header) acks only after the segment ships and the
+manifest CAS lands — see [Consistency](/consistency/#durability-modes). Unreferenced objects —
+orphaned segments, expired burner branches — are reclaimed by a refcounted GC across all branch
+manifests, safe under copy-on-write, after a grace window.
+
 ## Single writer, epoch fencing
 
 Each database (branch) has exactly one writer at a time:

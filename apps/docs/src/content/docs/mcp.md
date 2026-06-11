@@ -18,6 +18,15 @@ a streamable-HTTP transport for production and a `schema_inspect` tool.
 | `memory_recall {namespace, profile, query?, embedding?, topic_key?, types?, k?, include_superseded?, include_turns?}` | Hybrid recall: keyword + topic + vector channels, rank-fused; empty result means nothing relevant | ns:read or the profile's db token |
 | `memory_extract {namespace, profile, turns, session_id?, dry_run?}` | Distill raw turns into typed memories with the node's server-side extractor, then ingest; errors with 503 when the node has no extractor (see [Server-side extraction](/extraction/)) | ns:write |
 | `memory_forget {namespace, profile, id}` | Permanently delete one memory (hard delete; supersession preserves history without it) | ns:write |
+| `memory_get {namespace, profile, id}` | Fetch one memory by id with its supersession state; reports not-found rather than erroring | ns:read or the profile's db token |
+| `memory_profiles_list {namespace}` | List the profiles under a namespace — each is one isolated store | namespace token |
+
+### Sessions
+
+| Tool | Purpose | Scope |
+| --- | --- | --- |
+| `memory_sessions_list {namespace, profile, limit?}` | List recent sessions, most recent first | ns:read |
+| `memory_session_end {namespace, profile, session_id, drop_turns?}` | End a session: its task memories expire immediately, durable memories survive; `drop_turns` also deletes the verbatim transcript | ns:write |
 
 ### Transcript layer
 
@@ -48,7 +57,8 @@ a streamable-HTTP transport for production and a `schema_inspect` tool.
 
 `db` accepts a spec of `name` or `name@branch` (`@main` implicit). Every tool result carries
 the `txid` of the operation. Destructive tools — `branch_rewind`, `memory_forget`,
-`provision_database` — are the ones an MCP host should gate behind confirmation.
+`memory_session_end`, `provision_database` — are the ones an MCP host should gate behind
+confirmation.
 
 ## Auth postures
 
@@ -70,7 +80,8 @@ operations need `admin`. See [Security](/security/) for token minting.
 
 Per turn: call `memory_recall` at turn start to load what the profile already knows, act, then
 call `memory_ingest` at turn end with anything worth keeping (and `memory_append` for the
-verbatim turn, so nothing is lost between extractions).
+verbatim turn, so nothing is lost between extractions). When a session wraps, `memory_session_end`
+expires its task memories.
 
 Per session, the orchestrator pattern from the architecture: provision a database per
 session, hand the agent its scoped JWT, let the agent store turns, memories, and scratch state

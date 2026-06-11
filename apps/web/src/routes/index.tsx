@@ -20,7 +20,7 @@ const FEATURES = [
 	{
 		eyebrow: "shared",
 		title: "One profile, every agent",
-		body: "Each user, team, or persona gets an isolated memory profile that all of their agents read and write. Isolation is structural — namespace > profile > memory — and no data ever crosses a profile boundary.",
+		body: "Each user, team, or persona gets an isolated memory profile that all of their agents read and write. Isolation is structural — namespace > profile > memory — no data ever crosses a profile boundary, and deleting a profile revokes its stale write tokens.",
 		tags: ["namespaces", "profiles", "isolation"],
 	},
 	{
@@ -57,7 +57,7 @@ const CAPABILITIES = [
 	},
 	{
 		label: "object storage is truth",
-		body: "Committed transactions ship as immutable segments to object storage; nodes are disposable, replicas stream the log, and writer leases with epoch fencing make zombie writers harmless.",
+		body: "Committed transactions ship as immutable segments to object storage — opt into durable mode and writes ack only after the segment lands. Nodes are disposable, replicas stream the log, and writer leases with epoch fencing make zombie writers harmless.",
 		tags: ["segment log", "etcd leases", "epoch fencing"],
 	},
 	{
@@ -67,7 +67,7 @@ const CAPABILITIES = [
 	},
 	{
 		label: "self-hosted",
-		body: "A Rust data plane and one Helm chart, on any Kubernetes — EKS, GKE, AKS, or your own metal — with any S3-compatible object store. MCP server, CLI, and TypeScript/Python SDKs included.",
+		body: "A Rust data plane and one Helm chart hardened by default — non-root, read-only rootfs, locked-down egress — on any Kubernetes (EKS, GKE, AKS, or your own metal) with any S3-compatible object store. MCP server, CLI, and TypeScript/Python SDKs included.",
 		tags: ["Helm", "multi-cloud", "MCP + SDKs"],
 	},
 ];
@@ -140,7 +140,8 @@ function Landing() {
 					</h1>
 					<p className="mt-7 max-w-[56ch] text-pretty text-base leading-[1.55] text-sea-ink-soft dark:text-muted-foreground sm:text-lg">
 						Memoturn gives every user, team, or agent persona an isolated memory profile all of their agents share — typed memories with
-						supersession, hybrid recall, and a tiny per-profile database you can checkpoint, fork, and rewind. Self-hosted, on any Kubernetes.
+						supersession, hybrid recall, and a tiny per-profile database you can checkpoint, fork, and rewind. Self-hosted, on any
+						Kubernetes.
 					</p>
 					<div className="mt-9 flex flex-wrap items-center gap-3">
 						<Button asChild size="lg">
@@ -217,8 +218,8 @@ function Landing() {
 						</div>
 						<p className="max-w-[44ch] text-pretty text-[0.9375rem] leading-[1.65] text-sea-ink-soft dark:text-muted-foreground">
 							Agent memory is not a vector store with extra steps. Memoturn moves memory into the database: typed records that supersede
-							instead of duplicate, recall that fuses keyword, topic, and vector signals, and one profile boundary no data ever crosses —
-							in one unit that replicates, branches, and rewinds together.
+							instead of duplicate, recall that fuses keyword, topic, and vector signals, and one profile boundary no data ever crosses — in
+							one unit that replicates, branches, and rewinds together.
 						</p>
 					</div>
 				</div>

@@ -13,7 +13,8 @@ where `{db}` may be `name` or `name@branch`. A branch can also be selected with 
 `Memoturn-Branch` header.
 
 Every response carries a `Memoturn-Txid` header. Requests may carry `Memoturn-Min-Txid` for a
-read-your-writes floor and `Memoturn-Consistency: primary|cached` to pick a read mode. See
+read-your-writes floor and `Memoturn-Consistency: primary|cached` to pick a read mode. A write
+may carry `Memoturn-Durability: durable` to be acked only after it ships to object storage. See
 [consistency](/consistency/).
 
 Authentication is a bearer token: a per-database or namespace JWT for memory and data-plane
@@ -142,7 +143,10 @@ POST /v1/db/agent-42/sql
 { "results": [ [ { "count(*)": 3 } ] ], "txid": 17 }
 ```
 
-User SQL cannot touch reserved `__memoturn_` tables (KV, docs, memories, transcripts).
+User SQL cannot reference reserved `__memoturn_` tables (KV, docs, memories, transcripts),
+however the name is quoted. Sandbox escapes — `ATTACH`, `VACUUM INTO`, `PRAGMA writable_schema` —
+are rejected; benign read-only PRAGMAs (`integrity_check`, `table_info`) pass. Mutating
+statements need `write` scope; a read token gets `403`.
 
 ### KV
 
@@ -194,9 +198,9 @@ Platform routes, authenticated with the platform key.
 
 | Method | Path | Description |
 | --- | --- | --- |
-| POST | `/v1/databases` | Create a database (`{name, region, ttl?, durability?}`) |
+| POST | `/v1/databases` | Create a database (`{name}`) |
 | GET | `/v1/databases?cursor=` | List databases |
-| DELETE | `/v1/databases/{db}` | Delete a database |
+| DELETE | `/v1/databases/{db}` | Delete a database — write tokens minted before the deletion are revoked (`403`); see [security](/security/#token-revocation) |
 | POST | `/v1/databases/{db}/branches` | Fork a branch (`{name, from?, checkpoint?, ttl?}`; `ttl` makes a burner branch) |
 | POST | `/v1/databases/{db}/branches/{branch}/checkpoint` | Tag the current state (`{name}`) |
 | POST | `/v1/databases/{db}/branches/{branch}/rewind` | Rewind to a checkpoint or txid (`{to}`) |
@@ -217,6 +221,20 @@ POST /v1/databases/agent-42/tokens
 Token scopes are `read` (recall, get), `write` (ingest, forget, session end), and `admin`
 (checkpoint, rewind). Branch operations are O(1) manifest writes — see
 [branching](/branching/).
+
+## Limits
+
+The request surface is bounded by default — every knob is per node, tunable via
+[configuration](/configuration/#request-limits--durability):
+
+- Bodies over 32 MiB return `413`; requests have a 30 s wall-clock budget and a global
+  in-flight cap (1024).
+- Control endpoints (provision, branches, tokens) are rate-limited (10 req/s sustained);
+  overruns return `429`.
+- Memory ingest batches cap at 1,000 memories per request; recall `k` and result limits clamp
+  to 1,000.
+- Document filters reject nesting deeper than 32 levels and `$in`/`$nin` arrays over
+  1,000 items.
 
 The same surface is available through the [CLI](/cli/), the
 [TypeScript SDK](/sdk-typescript/), the [Python SDK](/sdk-python/), and the

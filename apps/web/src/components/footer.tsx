@@ -21,9 +21,7 @@ export default function Footer() {
 						<BrandMark gradient className="size-6 shrink-0" />
 						<span>Memoturn</span>
 					</Link>
-					<span className="text-[13px] leading-relaxed text-muted-foreground">
-						© {year} Memoturn. Memory for AI agents.
-					</span>
+					<span className="text-[13px] leading-relaxed text-muted-foreground">© {year} Memoturn. Memory for AI agents.</span>
 				</div>
 				<div className="flex flex-wrap items-center gap-4 border-t border-border pt-[18px]">
 					<span className="kicker m-0 text-muted-foreground">Apache-2.0</span>

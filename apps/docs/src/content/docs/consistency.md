@@ -88,12 +88,15 @@ the primary. See [Documents, KV, SQL & vectors](/data-model/#kv-namespaces).
 
 ## Durability modes
 
-Durability is configured per database at creation (`POST /v1/databases` with `durability`):
-
 | Mode | Commit point | RPO on node loss | Latency cost |
 | --- | --- | --- | --- |
-| **Standard** (default) | local WAL fsync; segments shipped to object storage ≤200 ms | ≤ ~1 s of writes | none |
-| **Durable** (opt-in) | commit acked only after the segment PUT is acknowledged by object storage | 0 | +5–15 ms |
+| **Standard** (default) | local WAL fsync; segments shipped by the sub-second background loop | ≤ ~1 s of writes | none |
+| **Durable** (opt-in) | txid returned only after the segment ships **and** the manifest CAS lands in object storage | 0 | one object-store round trip |
+
+Durable mode is set per node (`MEMOTURN_DURABILITY=durable`) or escalated per request with the
+`Memoturn-Durability: durable` header — the header can raise durability above the node default,
+never lower it. In Standard mode, `POST /v1/sync` remains the explicit on-demand durability
+point.
 
 In both modes object storage is the source of truth and nodes are disposable: a node loss never
 loses acknowledged Durable-mode commits, and loses at most ~1 s of Standard-mode commits.
