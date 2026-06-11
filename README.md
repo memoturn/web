@@ -1,7 +1,8 @@
 # Memoturn web
 
 Web surfaces for [Memoturn](https://github.com/memoturn/memoturn), split out of the product
-repo (history preserved). Private — brand and positioning registers live here.
+repo (history preserved). The brand and positioning registers (`BRAND.md`, `PRODUCT.md`,
+`DESIGN.md`) live here.
 
 pnpm/Turborepo monorepo, deployed to Cloudflare Workers:
 
