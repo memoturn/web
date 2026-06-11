@@ -22,7 +22,7 @@ pnpm dev:docs     # docs site only
 pnpm build        # production build of both apps
 pnpm typecheck    # tsc/astro check
 pnpm check        # biome lint + format (this repo is biome, not eslint/prettier)
-pnpm deploy       # build + deploy both apps via wrangler
+pnpm run deploy   # build + deploy both apps via wrangler ("run" required: bare `pnpm deploy` is pnpm's built-in)
 ```
 
 ## Source of truth

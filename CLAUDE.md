@@ -22,7 +22,7 @@ pnpm build          # turbo build of both apps
 pnpm typecheck      # tsc --noEmit / astro check per package
 pnpm check          # biome check --write (lint + format)
 pnpm check:ci       # biome ci, no writes
-pnpm deploy         # build + test + wrangler deploy (both apps)
+pnpm run deploy     # build + test + wrangler deploy (both apps) — "run" required, bare `pnpm deploy` hits pnpm's built-in
 pnpm deploy:staging # staging workers (memoturn-web-staging / memoturn-docs-staging)
 ```
 
